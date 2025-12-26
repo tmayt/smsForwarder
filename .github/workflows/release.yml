@@ -78,17 +78,38 @@ jobs:
         echo "storeFile=app-release.jks" >> keystore.properties
         
         # ایجاد keystore از base64 encoded secret
-        # استفاده از base64 -d برای Linux
-        echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > app-release.jks || {
-          echo "Failed to decode base64, trying alternative method..."
-          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > app-release.jks
-        }
+        # حذف whitespace و newline از base64 string
+        KEYSTORE_B64=$(echo "${{ secrets.KEYSTORE_BASE64 }}" | tr -d '[:space:]')
+        
+        # بررسی اینکه base64 string خالی نیست
+        if [ -z "$KEYSTORE_B64" ]; then
+          echo "ERROR: KEYSTORE_BASE64 secret is empty!"
+          exit 1
+        fi
+        
+        # Decode base64 به keystore
+        echo "$KEYSTORE_B64" | base64 -d > app-release.jks
+        
+        # بررسی اینکه decode موفق بوده
+        if [ $? -ne 0 ]; then
+          echo "ERROR: Failed to decode base64 keystore!"
+          exit 1
+        fi
         
         # بررسی اینکه فایل خالی نیست
         if [ ! -s app-release.jks ]; then
           echo "ERROR: Decoded keystore file is empty!"
           exit 1
         fi
+        
+        # بررسی سایز فایل (باید حدود 2-3 KB باشد)
+        FILE_SIZE=$(stat -f%z app-release.jks 2>/dev/null || stat -c%s app-release.jks 2>/dev/null || echo "0")
+        if [ "$FILE_SIZE" -lt 1000 ]; then
+          echo "ERROR: Keystore file is too small ($FILE_SIZE bytes). Decode may have failed."
+          exit 1
+        fi
+        
+        echo "Keystore decoded successfully. Size: $FILE_SIZE bytes"
         
         # بررسی وجود keystore
         if [ ! -f app-release.jks ]; then
