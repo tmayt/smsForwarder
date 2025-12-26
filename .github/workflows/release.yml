@@ -152,6 +152,13 @@ jobs:
           exit 1
         fi
     
+    - name: Get Build Date
+      id: build_date
+      run: |
+        BUILD_DATE=$(date -u +"%Y-%m-%d %H:%M:%S UTC")
+        echo "date=$BUILD_DATE" >> $GITHUB_OUTPUT
+        echo "Build Date: $BUILD_DATE"
+    
     - name: Create Release and Upload APK
       uses: softprops/action-gh-release@v1
       with:
@@ -161,7 +168,7 @@ jobs:
           ## Version ${{ steps.version.outputs.versionName }}
           
           - **Version Code:** ${{ steps.version.outputs.versionCode }}
-          - **Build Date:** $(date -u +"%Y-%m-%d %H:%M:%S UTC")
+          - **Build Date:** ${{ steps.build_date.outputs.date }}
           - **Commit:** ${{ github.sha }}
           
           ### Changes
