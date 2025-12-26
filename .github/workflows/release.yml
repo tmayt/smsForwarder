@@ -78,16 +78,40 @@ jobs:
         echo "storeFile=app-release.jks" >> keystore.properties
         
         # ایجاد keystore از base64 encoded secret
-        echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > app-release.jks
+        # استفاده از base64 -d برای Linux
+        echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > app-release.jks || {
+          echo "Failed to decode base64, trying alternative method..."
+          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > app-release.jks
+        }
+        
+        # بررسی اینکه فایل خالی نیست
+        if [ ! -s app-release.jks ]; then
+          echo "ERROR: Decoded keystore file is empty!"
+          exit 1
+        fi
         
         # بررسی وجود keystore
-        if [ -f app-release.jks ]; then
-          echo "Keystore created successfully"
-          ls -lh app-release.jks
-        else
+        if [ ! -f app-release.jks ]; then
           echo "ERROR: Keystore file not created!"
           exit 1
         fi
+        
+        # بررسی صحت keystore
+        STORE_PASS="${{ secrets.KEYSTORE_PASSWORD }}"
+        KEY_ALIAS="${{ secrets.KEY_ALIAS }}"
+        
+        echo "Verifying keystore..."
+        if keytool -list -v -keystore app-release.jks -storepass "$STORE_PASS" -alias "$KEY_ALIAS" > /dev/null 2>&1; then
+          echo "✅ Keystore verified successfully"
+          keytool -list -v -keystore app-release.jks -storepass "$STORE_PASS" -alias "$KEY_ALIAS" | head -5
+        else
+          echo "❌ ERROR: Keystore verification failed!"
+          echo "Checking keystore contents..."
+          keytool -list -keystore app-release.jks -storepass "$STORE_PASS" 2>&1 || true
+          exit 1
+        fi
+        
+        ls -lh app-release.jks
     
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
@@ -136,4 +160,5 @@ jobs:
         git add build.gradle.kts
         git diff --staged --quiet || git commit -m "Bump version to ${{ steps.version.outputs.versionName }}"
         git push origin HEAD:${{ github.ref }} || echo "Failed to push version update (may need write permissions)"
+
 
