@@ -69,23 +69,43 @@ jobs:
         echo "Updated build.gradle.kts:"
         grep -E "(versionCode|versionName)" build.gradle.kts
     
+    - name: Setup Keystore
+      run: |
+        # ایجاد keystore.properties از secrets
+        echo "storePassword=${{ secrets.KEYSTORE_PASSWORD }}" > keystore.properties
+        echo "keyPassword=${{ secrets.KEY_PASSWORD }}" >> keystore.properties
+        echo "keyAlias=${{ secrets.KEY_ALIAS }}" >> keystore.properties
+        echo "storeFile=app-release.jks" >> keystore.properties
+        
+        # ایجاد keystore از base64 encoded secret
+        echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > app-release.jks
+        
+        # بررسی وجود keystore
+        if [ -f app-release.jks ]; then
+          echo "Keystore created successfully"
+          ls -lh app-release.jks
+        else
+          echo "ERROR: Keystore file not created!"
+          exit 1
+        fi
+    
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     
     - name: Build release APK
       run: ./gradlew assembleRelease
     
-    - name: Sign APK (optional - if you have a keystore)
-      if: false  # غیرفعال است، اگر keystore دارید می‌توانید فعال کنید
-      run: |
-        # این بخش را می‌توانید برای امضا کردن APK استفاده کنید
-        # echo "Signing APK..."
-    
     - name: Rename APK
       run: |
         VERSION_NAME="${{ steps.version.outputs.versionName }}"
-        cp build/outputs/apk/release/smsforwarder-release-unsigned.apk \
-           build/outputs/apk/release/smsforwarder-$VERSION_NAME.apk
+        # نام فایل APK امضا شده
+        if [ -f build/outputs/apk/release/smsforwarder-release.apk ]; then
+          cp build/outputs/apk/release/smsforwarder-release.apk \
+             build/outputs/apk/release/smsforwarder-$VERSION_NAME.apk
+        else
+          echo "ERROR: Signed APK not found!"
+          exit 1
+        fi
     
     - name: Create Release and Upload APK
       uses: softprops/action-gh-release@v1
@@ -103,6 +123,7 @@ jobs:
           ${{ github.event.head_commit.message }}
         files: |
           build/outputs/apk/release/smsforwarder-${{ steps.version.outputs.versionName }}.apk
+        generate_release_notes: false
         draft: false
         prerelease: false
       env:
