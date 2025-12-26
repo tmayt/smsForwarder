@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="SMS Forwarder"
+                android:textSize="28sp"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:textColor="?attr/colorPrimary"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="24dp" />
+
+            <!-- فعال/غیرفعال کردن برنامه -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonToggleEnabled"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="غیرفعال"
+                android:textSize="16sp"
+                android:layout_marginBottom="16dp"
+                android:minHeight="56dp"
+                style="@style/Widget.MaterialComponents.Button" />
+
+            <!-- آدرس وب‌هوک -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:hint="آدرس وب‌هوک (URL)"
+                app:boxStrokeWidthFocused="2dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editWebhookUrl"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textUri"
+                    android:imeOptions="actionDone" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- لیست شرایط -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="شرایط فیلتر"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="?attr/colorPrimary"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="12dp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewConditions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
+                android:layout_marginBottom="16dp" />
+
+            <!-- دکمه افزودن شرط -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonAddCondition"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="+ افزودن شرط جدید"
+                android:layout_marginBottom="16dp"
+                android:minHeight="56dp"
+                style="@style/ButtonStyle.Outlined" />
+
+            <!-- دکمه ذخیره -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonSave"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="ذخیره تنظیمات"
+                android:textSize="16sp"
+                android:minHeight="56dp"
+                android:layout_marginTop="8dp"
+                style="@style/ButtonStyle.Primary" />
+
+            <!-- راهنما -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="?attr/colorSurface">
+                
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="راهنما:\n• آدرس وب‌هوک الزامی است\n• می‌توانید چندین شرط اضافه کنید\n• اگر هر کدام از شرط‌ها تطابق داشته باشد، ارسال انجام می‌شود (OR)\n• متن پیام در payload با کلید 'message' ارسال می‌شود"
+                    android:textSize="13sp"
+                    android:textColor="?attr/colorOnSurface"
+                    android:alpha="0.7"
+                    android:padding="16dp"
+                    android:lineSpacingExtra="4dp" />
+            </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

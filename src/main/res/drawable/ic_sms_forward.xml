@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    
+    <!-- Background Circle -->
+    <path
+        android:fillColor="#2196F3"
+        android:pathData="M54,54m-50,0a50,50 0,1 1,100 0a50,50 0,1 1,-100 0"/>
+    
+    <!-- SMS Icon -->
+    <group
+        android:translateX="54"
+        android:translateY="40">
+        <!-- Message bubble -->
+        <path
+            android:fillColor="#FFFFFF"
+            android:pathData="M-20,-10 L20,-10 L20,10 L-5,10 L-10,15 L-10,10 L-20,10 Z"/>
+        <!-- Message lines -->
+        <path
+            android:fillColor="#2196F3"
+            android:pathData="M-15,-5 L10,-5 L10,-3 L-15,-3 Z"/>
+        <path
+            android:fillColor="#2196F3"
+            android:pathData="M-15,0 L5,0 L5,2 L-15,2 Z"/>
+    </group>
+    
+    <!-- Forward Arrow -->
+    <group
+        android:translateX="54"
+        android:translateY="70">
+        <path
+            android:fillColor="#FFFFFF"
+            android:pathData="M-8,-2 L8,-2 L8,0 L12,0 L6,6 L0,0 L4,0 L4,-2 Z"/>
+    </group>
+    
+</vector>
+
