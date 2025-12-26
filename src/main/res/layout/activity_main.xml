@@ -54,6 +54,26 @@
                     android:imeOptions="actionDone" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <!-- هدرهای سفارشی -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:hint="هدرهای سفارشی (JSON - اختیاری)"
+                app:boxStrokeWidthFocused="2dp"
+                app:helperTextEnabled="true"
+                app:helperText="مثال: {\"Authorization\": \"Bearer token\", \"X-Custom\": \"value\"}">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editCustomHeaders"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textMultiLine"
+                    android:minLines="3"
+                    android:maxLines="5"
+                    android:imeOptions="actionDone" />
+            </com.google.android.material.textfield.TextInputLayout>
+
             <!-- لیست شرایط -->
             <TextView
                 android:layout_width="match_parent"

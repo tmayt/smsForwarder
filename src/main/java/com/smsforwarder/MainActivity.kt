@@ -22,6 +22,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var settingsManager: SettingsManager
     private lateinit var buttonToggleEnabled: MaterialButton
     private lateinit var editWebhookUrl: EditText
+    private lateinit var editCustomHeaders: TextInputEditText
     private lateinit var buttonSave: Button
     private lateinit var buttonAddCondition: MaterialButton
     private lateinit var recyclerViewConditions: RecyclerView
@@ -47,6 +48,7 @@ class MainActivity : AppCompatActivity() {
     private fun initViews() {
         buttonToggleEnabled = findViewById(R.id.buttonToggleEnabled)
         editWebhookUrl = findViewById(R.id.editWebhookUrl)
+        editCustomHeaders = findViewById(R.id.editCustomHeaders)
         buttonSave = findViewById(R.id.buttonSave)
         buttonAddCondition = findViewById(R.id.buttonAddCondition)
         recyclerViewConditions = findViewById(R.id.recyclerViewConditions)
@@ -65,6 +67,7 @@ class MainActivity : AppCompatActivity() {
     private fun loadSettings() {
         updateToggleButton()
         editWebhookUrl.setText(settingsManager.getWebhookUrl())
+        editCustomHeaders.setText(settingsManager.getCustomHeaders())
         conditionAdapter.updateConditions(settingsManager.getConditions())
     }
     
@@ -177,10 +180,22 @@ class MainActivity : AppCompatActivity() {
     
     private fun saveSettings() {
         val webhookUrl = editWebhookUrl.text.toString().trim()
+        val customHeaders = editCustomHeaders.text.toString().trim()
         
         if (webhookUrl.isBlank()) {
             Toast.makeText(this, "لطفاً آدرس وب‌هوک را وارد کنید", Toast.LENGTH_SHORT).show()
             return
+        }
+        
+        // بررسی صحت JSON هدرها (اگر وارد شده باشد)
+        if (customHeaders.isNotBlank()) {
+            try {
+                val jsonObject = org.json.JSONObject(customHeaders)
+                // اگر JSON معتبر باشد، ادامه می‌دهیم
+            } catch (e: Exception) {
+                Toast.makeText(this, "فرمت JSON هدرها نامعتبر است. لطفاً بررسی کنید.", Toast.LENGTH_LONG).show()
+                return
+            }
         }
         
         val conditions = settingsManager.getConditions()
@@ -191,6 +206,7 @@ class MainActivity : AppCompatActivity() {
         
         // ذخیره تنظیمات
         settingsManager.setWebhookUrl(webhookUrl)
+        settingsManager.setCustomHeaders(customHeaders)
         
         Toast.makeText(this, "تنظیمات ذخیره شد", Toast.LENGTH_SHORT).show()
     }

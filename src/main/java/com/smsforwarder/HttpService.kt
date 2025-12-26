@@ -16,19 +16,37 @@ class HttpService {
     
     private val jsonMediaType = "application/json; charset=utf-8".toMediaType()
     
-    fun sendPost(url: String, message: String): Boolean {
+    fun sendPost(url: String, message: String, sender: String, customHeadersJson: String? = null): Boolean {
         return try {
             val json = JSONObject()
-            json.put("message", message)
+            json.put("text", message)
             json.put("timestamp", System.currentTimeMillis())
+            json.put("from", sender)
             
             val requestBody = json.toString().toRequestBody(jsonMediaType)
             
-            val request = Request.Builder()
+            val requestBuilder = Request.Builder()
                 .url(url)
                 .post(requestBody)
                 .addHeader("Content-Type", "application/json")
-                .build()
+            
+            // افزودن هدرهای سفارشی
+            if (!customHeadersJson.isNullOrBlank()) {
+                try {
+                    val headersJson = JSONObject(customHeadersJson)
+                    val keys = headersJson.keys()
+                    while (keys.hasNext()) {
+                        val key = keys.next()
+                        val value = headersJson.getString(key)
+                        requestBuilder.addHeader(key, value)
+                    }
+                } catch (e: Exception) {
+                    android.util.Log.e("HttpService", "Error parsing custom headers", e)
+                    // در صورت خطا در parse، هدرهای سفارشی نادیده گرفته می‌شوند
+                }
+            }
+            
+            val request = requestBuilder.build()
             
             val response = client.newCall(request).execute()
             val success = response.isSuccessful

@@ -14,6 +14,7 @@ class SettingsManager(context: Context) {
         private const val PREFS_NAME = "sms_filter_prefs"
         private const val KEY_ENABLED = "enabled"
         private const val KEY_WEBHOOK_URL = "webhook_url"
+        private const val KEY_CUSTOM_HEADERS = "custom_headers"
         private const val KEY_CONDITIONS = "conditions"
     }
     
@@ -31,6 +32,14 @@ class SettingsManager(context: Context) {
     
     fun setWebhookUrl(url: String) {
         prefs.edit().putString(KEY_WEBHOOK_URL, url).apply()
+    }
+    
+    fun getCustomHeaders(): String {
+        return prefs.getString(KEY_CUSTOM_HEADERS, "") ?: ""
+    }
+    
+    fun setCustomHeaders(headers: String) {
+        prefs.edit().putString(KEY_CUSTOM_HEADERS, headers).apply()
     }
     
     fun getConditions(): List<Condition> {

@@ -90,7 +90,8 @@ class SmsReceiver : BroadcastReceiver() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val httpService = HttpService()
-                val success = httpService.sendPost(url, messageBody)
+                val customHeaders = settingsManager.getCustomHeaders()
+                val success = httpService.sendPost(url, messageBody, sender, customHeaders)
                 
                 if (success) {
                     Log.d("SmsReceiver", "HTTP POST sent successfully")
