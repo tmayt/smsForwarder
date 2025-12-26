@@ -9,12 +9,15 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write  # برای ایجاد release و push کردن تغییرات
     
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
       with:
         fetch-depth: 0  # برای دسترسی به تمام commit ها و tag ها
+        token: ${{ secrets.GITHUB_TOKEN }}  # برای push کردن تغییرات
     
     - name: Set up JDK 17
       uses: actions/setup-java@v4
