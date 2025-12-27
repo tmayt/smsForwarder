@@ -62,7 +62,7 @@
                 android:hint="هدرهای سفارشی (JSON - اختیاری)"
                 app:boxStrokeWidthFocused="2dp"
                 app:helperTextEnabled="true"
-                app:helperText="مثال: {\"Authorization\": \"Bearer token\", \"X-Custom\": \"value\"}">
+                app:helperText="مثال: {&quot;Authorization&quot;: &quot;Bearer token&quot;, &quot;X-Custom&quot;: &quot;value&quot;}">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/editCustomHeaders"
