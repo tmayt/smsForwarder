@@ -63,17 +63,13 @@
     </group>
     
     <!-- Decorative accent dots -->
-    <circle
+    <path
         android:fillColor="#FFFFFF"
-        android:cx="18"
-        android:cy="20"
-        android:r="2"
+        android:pathData="M18,18 A2,2 0 0,1 18,22 A2,2 0 0,1 18,18 Z"
         android:alpha="0.6"/>
-    <circle
+    <path
         android:fillColor="#FFFFFF"
-        android:cx="90"
-        android:cy="20"
-        android:r="1.5"
+        android:pathData="M90,18.5 A1.5,1.5 0 0,1 90,21.5 A1.5,1.5 0 0,1 90,18.5 Z"
         android:alpha="0.5"/>
     
 </vector>
