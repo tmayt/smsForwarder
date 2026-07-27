@@ -16,6 +16,10 @@ class SettingsManager(context: Context) {
         private const val KEY_WEBHOOK_URL = "webhook_url"
         private const val KEY_CUSTOM_HEADERS = "custom_headers"
         private const val KEY_CONDITIONS = "conditions"
+        private const val KEY_HTTP_METHOD = "http_method"
+        private const val KEY_PAYLOAD_TEMPLATE = "payload_template"
+
+        val HTTP_METHODS = listOf("POST", "GET", "PUT", "PATCH", "DELETE")
     }
     
     fun isEnabled(): Boolean {
@@ -40,6 +44,23 @@ class SettingsManager(context: Context) {
     
     fun setCustomHeaders(headers: String) {
         prefs.edit().putString(KEY_CUSTOM_HEADERS, headers).apply()
+    }
+
+    fun getHttpMethod(): String {
+        return prefs.getString(KEY_HTTP_METHOD, "POST") ?: "POST"
+    }
+
+    fun setHttpMethod(method: String) {
+        prefs.edit().putString(KEY_HTTP_METHOD, method.uppercase()).apply()
+    }
+
+    fun getPayloadTemplate(): String {
+        return prefs.getString(KEY_PAYLOAD_TEMPLATE, PayloadBuilder.DEFAULT_TEMPLATE)
+            ?: PayloadBuilder.DEFAULT_TEMPLATE
+    }
+
+    fun setPayloadTemplate(template: String) {
+        prefs.edit().putString(KEY_PAYLOAD_TEMPLATE, template).apply()
     }
     
     fun getConditions(): List<Condition> {

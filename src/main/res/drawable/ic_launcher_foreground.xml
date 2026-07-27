@@ -4,72 +4,34 @@
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
-    
-    <!-- Modern SMS Message Bubble -->
-    <group
-        android:translateX="20"
-        android:translateY="30">
-        <!-- Rounded message bubble with shadow effect -->
-        <path
-            android:fillColor="#FFFFFF"
-            android:pathData="M0,4 Q0,0 4,0 L36,0 Q40,0 40,4 L40,24 Q40,28 36,28 L12,28 L8,34 L8,28 L4,28 Q0,28 0,24 Z"
-            android:alpha="0.95"/>
-        <!-- Message text lines - modern style -->
-        <path
-            android:fillColor="#6366F1"
-            android:pathData="M6,8 L34,8 L34,10 L6,10 Z"/>
-        <path
-            android:fillColor="#6366F1"
-            android:pathData="M6,14 L30,14 L30,16 L6,16 Z"/>
-        <path
-            android:fillColor="#6366F1"
-            android:pathData="M6,20 L26,20 L26,22 L6,22 Z"/>
-    </group>
-    
-    <!-- Modern Forward Arrow with rounded design -->
-    <group
-        android:translateX="58"
-        android:translateY="54">
-        <!-- Arrow body -->
-        <path
-            android:fillColor="#FFFFFF"
-            android:pathData="M-8,0 L8,0 L8,3 L14,3 L7,12 L0,3 L6,3 L6,0 Z"
-            android:alpha="0.95"/>
-        <!-- Arrow accent -->
-        <path
-            android:fillColor="#EC4899"
-            android:pathData="M-6,1 L6,1 L6,2 L10,2 L5,9 L0,2 L4,2 L4,1 Z"
-            android:alpha="0.8"/>
-    </group>
-    
-    <!-- Modern Web/Network Icon -->
-    <group
-        android:translateX="70"
-        android:translateY="54">
-        <!-- Rounded square with gradient effect -->
-        <path
-            android:fillColor="#FFFFFF"
-            android:pathData="M0,2 Q0,0 2,0 L6,0 Q8,0 8,2 L8,6 Q8,8 6,8 L2,8 Q0,8 0,6 Z"
-            android:alpha="0.95"/>
-        <path
-            android:fillColor="#6366F1"
-            android:pathData="M2,2 L6,2 L6,6 L2,6 Z"
-            android:alpha="0.9"/>
-        <!-- Network lines -->
-        <path
-            android:fillColor="#EC4899"
-            android:pathData="M3,3 L5,3 L5,5 L3,5 Z"
-            android:alpha="0.8"/>
-    </group>
-    
-    <!-- Decorative accent dots -->
+
+    <!-- SMS bubble with tail -->
     <path
         android:fillColor="#FFFFFF"
-        android:pathData="M18,18 A2,2 0 0,1 18,22 A2,2 0 0,1 18,18 Z"
-        android:alpha="0.6"/>
+        android:pathData="M26,28 C26,24 29,20 34,20 H56 C61,20 64,24 64,28 V46 C64,50 61,54 56,54 H38 L30,62 L30,54 H34 C29,54 26,50 26,46 Z" />
+
+    <!-- Text lines inside bubble -->
+    <path
+        android:fillColor="#0284C7"
+        android:pathData="M34,32 H56 V34 H34 Z" />
+    <path
+        android:fillColor="#0284C7"
+        android:pathData="M34,38 H50 V40 H34 Z" />
+    <path
+        android:fillColor="#0284C7"
+        android:pathData="M34,44 H44 V46 H34 Z" />
+
+    <!-- Green forward badge -->
+    <path
+        android:fillColor="#22C55E"
+        android:pathData="M58,56 A20,20 0 1,1 58,96 A20,20 0 1,1 58,56 Z" />
+
+    <!-- White arrow -->
     <path
         android:fillColor="#FFFFFF"
-        android:pathData="M90,18.5 A1.5,1.5 0 0,1 90,21.5 A1.5,1.5 0 0,1 90,18.5 Z"
-        android:alpha="0.5"/>
-    
+        android:pathData="M54,70 L70,76 L54,82 Z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M62,74 L78,74 L78,78 L62,78 Z" />
+
 </vector>

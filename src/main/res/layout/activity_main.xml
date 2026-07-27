@@ -27,7 +27,6 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="24dp" />
 
-            <!-- فعال/غیرفعال کردن برنامه -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/buttonToggleEnabled"
                 android:layout_width="match_parent"
@@ -38,7 +37,6 @@
                 android:minHeight="56dp"
                 style="@style/Widget.MaterialComponents.Button" />
 
-            <!-- آدرس وب‌هوک -->
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -54,7 +52,45 @@
                     android:imeOptions="actionDone" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- هدرهای سفارشی -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="متد درخواست HTTP"
+                android:textSize="14sp"
+                android:textColor="?attr/colorOnSurface"
+                android:alpha="0.8"
+                android:layout_marginBottom="4dp" />
+
+            <Spinner
+                android:id="@+id/spinnerHttpMethod"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginBottom="16dp"
+                android:background="@android:drawable/btn_dropdown"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:hint="قالب Payload (JSON)"
+                app:boxStrokeWidthFocused="2dp"
+                app:helperTextEnabled="true"
+                app:helperText="متغیرها: {{text}} {{message}} {{from}} {{timestamp}}">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editPayloadTemplate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textMultiLine"
+                    android:minLines="4"
+                    android:maxLines="8"
+                    android:fontFamily="monospace"
+                    android:textSize="13sp"
+                    android:imeOptions="actionDone" />
+            </com.google.android.material.textfield.TextInputLayout>
+
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -62,7 +98,7 @@
                 android:hint="هدرهای سفارشی (JSON - اختیاری)"
                 app:boxStrokeWidthFocused="2dp"
                 app:helperTextEnabled="true"
-                app:helperText="مثال: {&quot;Authorization&quot;: &quot;Bearer token&quot;, &quot;X-Custom&quot;: &quot;value&quot;}">
+                app:helperText="مثال: {&quot;Authorization&quot;: &quot;Bearer token&quot;}">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/editCustomHeaders"
@@ -74,7 +110,6 @@
                     android:imeOptions="actionDone" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- لیست شرایط -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -92,7 +127,6 @@
                 android:nestedScrollingEnabled="false"
                 android:layout_marginBottom="16dp" />
 
-            <!-- دکمه افزودن شرط -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/buttonAddCondition"
                 android:layout_width="match_parent"
@@ -102,7 +136,6 @@
                 android:minHeight="56dp"
                 style="@style/ButtonStyle.Outlined" />
 
-            <!-- دکمه ذخیره -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/buttonSave"
                 android:layout_width="match_parent"
@@ -113,19 +146,69 @@
                 android:layout_marginTop="8dp"
                 style="@style/ButtonStyle.Primary" />
 
-            <!-- راهنما -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="12dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="لاگ فوروارد"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:textColor="?attr/colorPrimary" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/buttonRefreshLogs"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="بروزرسانی"
+                    style="@style/Widget.MaterialComponents.Button.TextButton" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/buttonClearLogs"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="پاک کردن"
+                    style="@style/Widget.MaterialComponents.Button.TextButton" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/textLogsEmpty"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="هنوز لاگی ثبت نشده. وقتی پیامی تشخیص داده و فوروارد شود، اینجا نمایش داده می‌شود."
+                android:textSize="13sp"
+                android:textColor="?attr/colorOnSurface"
+                android:alpha="0.6"
+                android:gravity="center"
+                android:padding="16dp"
+                android:visibility="gone" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewLogs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
+                android:layout_marginBottom="16dp" />
+
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 app:cardCornerRadius="8dp"
                 app:cardElevation="2dp"
                 app:cardBackgroundColor="?attr/colorSurface">
-                
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="راهنما:\n• آدرس وب‌هوک الزامی است\n• می‌توانید چندین شرط اضافه کنید\n• اگر هر کدام از شرط‌ها تطابق داشته باشد، ارسال انجام می‌شود (OR)\n• متن پیام در payload با کلید 'message' ارسال می‌شود"
+                    android:text="راهنما:\n• آدرس وب‌هوک الزامی است\n• متد و قالب Payload قابل تنظیم هستند\n• اگر هر کدام از شرط‌ها تطابق داشته باشد، ارسال انجام می‌شود (OR)\n• متغیرهای Payload: {{text}}، {{message}}، {{from}}، {{timestamp}}"
                     android:textSize="13sp"
                     android:textColor="?attr/colorOnSurface"
                     android:alpha="0.7"
