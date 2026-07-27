@@ -30,8 +30,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            android:hint="شماره فرستنده (شامل)"
-            app:helperText="اگر شماره فرستنده شامل این متن باشد"
+            android:hint="فرستنده شامل (شماره یا نام)"
+            app:helperText="شماره یا نام سازمانی؛ مثلاً 0912 یا Bank یا 1000"
             app:boxStrokeWidthFocused="2dp"
             app:boxStrokeColor="?attr/colorPrimary">
 
@@ -39,7 +39,7 @@
                 android:id="@+id/editSender"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="phone"
+                android:inputType="textVisiblePassword"
                 android:imeOptions="actionNext" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -47,8 +47,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            android:hint="شماره فرستنده (دقیق)"
-            app:helperText="اگر شماره فرستنده دقیقاً این باشد"
+            android:hint="فرستنده دقیق (شماره یا نام)"
+            app:helperText="اگر فرستنده دقیقاً همین شماره یا نام سازمانی باشد"
             app:boxStrokeWidthFocused="2dp"
             app:boxStrokeColor="?attr/colorPrimary">
 
@@ -56,7 +56,7 @@
                 android:id="@+id/editExactSender"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="phone"
+                android:inputType="textVisiblePassword"
                 android:imeOptions="actionNext" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -82,4 +82,3 @@
     </LinearLayout>
 
 </androidx.core.widget.NestedScrollView>
-

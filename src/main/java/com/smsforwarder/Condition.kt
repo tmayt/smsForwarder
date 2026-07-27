@@ -3,38 +3,36 @@ package com.smsforwarder
 data class Condition(
     val id: String = System.currentTimeMillis().toString(),
     val name: String = "",
-    val sender: String = "",  // شماره فرستنده (شامل)
-    val exactSender: String = "",  // شماره فرستنده (دقیق)
+    val sender: String = "",  // فرستنده شامل (شماره یا نام سازمانی)
+    val exactSender: String = "",  // فرستنده دقیق (شماره یا نام سازمانی)
     val message: String = ""  // متن پیام (شامل)
 ) {
-    fun matches(sender: String, messageBody: String): Boolean {
-        // اگر هیچ شرطی پر نشده، false برگردان
-        if (sender.isBlank() && exactSender.isBlank() && message.isBlank()) {
+    fun matches(incomingSender: String, messageBody: String): Boolean {
+        if (isEmpty()) {
             return false
         }
-        
+
         var matches = true
-        
-        // بررسی شماره فرستنده (شامل)
-        if (this.sender.isNotBlank()) {
-            matches = matches && sender.contains(this.sender, ignoreCase = true)
+
+        // بررسی فرستنده (شامل) — شماره یا نام سازمانی مثل Bank / 1000
+        if (sender.isNotBlank()) {
+            matches = matches && incomingSender.contains(sender, ignoreCase = true)
         }
-        
-        // بررسی شماره فرستنده (دقیق)
-        if (this.exactSender.isNotBlank()) {
-            matches = matches && sender == this.exactSender
+
+        // بررسی فرستنده (دقیق) — بدون حساسیت به حروف بزرگ/کوچک
+        if (exactSender.isNotBlank()) {
+            matches = matches && incomingSender.equals(exactSender, ignoreCase = true)
         }
-        
+
         // بررسی متن پیام
-        if (this.message.isNotBlank()) {
-            matches = matches && messageBody.contains(this.message, ignoreCase = true)
+        if (message.isNotBlank()) {
+            matches = matches && messageBody.contains(message, ignoreCase = true)
         }
-        
+
         return matches
     }
-    
+
     fun isEmpty(): Boolean {
         return sender.isBlank() && exactSender.isBlank() && message.isBlank()
     }
 }
-

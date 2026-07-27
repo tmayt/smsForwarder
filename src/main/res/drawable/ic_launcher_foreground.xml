@@ -5,33 +5,14 @@
     android:viewportWidth="108"
     android:viewportHeight="108">
 
-    <!-- SMS bubble with tail -->
+    <!-- Centered white mark circle -->
     <path
         android:fillColor="#FFFFFF"
-        android:pathData="M26,28 C26,24 29,20 34,20 H56 C61,20 64,24 64,28 V46 C64,50 61,54 56,54 H38 L30,62 L30,54 H34 C29,54 26,50 26,46 Z" />
+        android:pathData="M54,54m-26,0a26,26 0,1 1,52 0a26,26 0,1 1,-52 0" />
 
-    <!-- Text lines inside bubble -->
+    <!-- Minimal forward arrow -->
     <path
-        android:fillColor="#0284C7"
-        android:pathData="M34,32 H56 V34 H34 Z" />
-    <path
-        android:fillColor="#0284C7"
-        android:pathData="M34,38 H50 V40 H34 Z" />
-    <path
-        android:fillColor="#0284C7"
-        android:pathData="M34,44 H44 V46 H34 Z" />
-
-    <!-- Green forward badge -->
-    <path
-        android:fillColor="#22C55E"
-        android:pathData="M58,56 A20,20 0 1,1 58,96 A20,20 0 1,1 58,56 Z" />
-
-    <!-- White arrow -->
-    <path
-        android:fillColor="#FFFFFF"
-        android:pathData="M54,70 L70,76 L54,82 Z" />
-    <path
-        android:fillColor="#FFFFFF"
-        android:pathData="M62,74 L78,74 L78,78 L62,78 Z" />
+        android:fillColor="#0B4F6C"
+        android:pathData="M42,54 L58,44 L58,50 L68,50 L68,58 L58,58 L58,64 Z" />
 
 </vector>

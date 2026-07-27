@@ -2,6 +2,10 @@
 <resources>
     <!-- Dark theme overrides -->
     <style name="Theme.SmsForwarder" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Persian typography -->
+        <item name="android:fontFamily">@font/vazirmatn</item>
+        <item name="fontFamily">@font/vazirmatn</item>
+
         <!-- Primary colors -->
         <item name="colorPrimary">@color/primary_blue_light</item>
         <item name="colorPrimaryVariant">@color/primary_blue</item>
