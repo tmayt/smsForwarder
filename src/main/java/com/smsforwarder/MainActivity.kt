@@ -9,6 +9,8 @@ import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
@@ -19,6 +21,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.materialswitch.MaterialSwitch
 import com.google.android.material.textfield.TextInputEditText
 
 class MainActivity : AppCompatActivity() {
@@ -26,9 +29,14 @@ class MainActivity : AppCompatActivity() {
     private lateinit var settingsManager: SettingsManager
     private lateinit var logManager: LogManager
     private lateinit var buttonToggleEnabled: MaterialButton
+    private lateinit var textEnabledStatus: TextView
+    private lateinit var layoutWebhookHeader: LinearLayout
+    private lateinit var layoutWebhookContent: LinearLayout
+    private lateinit var imageWebhookExpand: ImageView
     private lateinit var editWebhookUrl: EditText
     private lateinit var spinnerHttpMethod: Spinner
     private lateinit var editPayloadTemplate: TextInputEditText
+    private lateinit var switchMarkdownCodeBlock: MaterialSwitch
     private lateinit var editCustomHeaders: TextInputEditText
     private lateinit var buttonSave: Button
     private lateinit var buttonAddCondition: MaterialButton
@@ -40,6 +48,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var conditionAdapter: ConditionAdapter
     private lateinit var logAdapter: LogAdapter
 
+    private var webhookExpanded = false
     private val PERMISSION_REQUEST_CODE = 100
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,9 +74,14 @@ class MainActivity : AppCompatActivity() {
 
     private fun initViews() {
         buttonToggleEnabled = findViewById(R.id.buttonToggleEnabled)
+        textEnabledStatus = findViewById(R.id.textEnabledStatus)
+        layoutWebhookHeader = findViewById(R.id.layoutWebhookHeader)
+        layoutWebhookContent = findViewById(R.id.layoutWebhookContent)
+        imageWebhookExpand = findViewById(R.id.imageWebhookExpand)
         editWebhookUrl = findViewById(R.id.editWebhookUrl)
         spinnerHttpMethod = findViewById(R.id.spinnerHttpMethod)
         editPayloadTemplate = findViewById(R.id.editPayloadTemplate)
+        switchMarkdownCodeBlock = findViewById(R.id.switchMarkdownCodeBlock)
         editCustomHeaders = findViewById(R.id.editCustomHeaders)
         buttonSave = findViewById(R.id.buttonSave)
         buttonAddCondition = findViewById(R.id.buttonAddCondition)
@@ -76,6 +90,9 @@ class MainActivity : AppCompatActivity() {
         textLogsEmpty = findViewById(R.id.textLogsEmpty)
         buttonRefreshLogs = findViewById(R.id.buttonRefreshLogs)
         buttonClearLogs = findViewById(R.id.buttonClearLogs)
+
+        // آکاردئون وب‌هوک به‌صورت پیش‌فرض بسته است
+        setWebhookExpanded(false)
     }
 
     private fun setupHttpMethodSpinner() {
@@ -105,6 +122,7 @@ class MainActivity : AppCompatActivity() {
         updateToggleButton()
         editWebhookUrl.setText(settingsManager.getWebhookUrl())
         editPayloadTemplate.setText(settingsManager.getPayloadTemplate())
+        switchMarkdownCodeBlock.isChecked = settingsManager.isMarkdownCodeBlock()
         editCustomHeaders.setText(settingsManager.getCustomHeaders())
         conditionAdapter.updateConditions(settingsManager.getConditions())
 
@@ -123,24 +141,33 @@ class MainActivity : AppCompatActivity() {
 
     private fun updateToggleButton() {
         val isEnabled = settingsManager.isEnabled()
+        buttonToggleEnabled.text = null
         if (isEnabled) {
-            buttonToggleEnabled.text = "غیرفعال کردن برنامه"
-            buttonToggleEnabled.setBackgroundTintList(
-                ContextCompat.getColorStateList(this, R.color.error_red)
-            )
-            buttonToggleEnabled.setTextColor(ContextCompat.getColor(this, android.R.color.white))
-        } else {
-            buttonToggleEnabled.text = "فعال کردن برنامه"
             buttonToggleEnabled.setBackgroundTintList(
                 ContextCompat.getColorStateList(this, R.color.success_green)
             )
-            buttonToggleEnabled.setTextColor(ContextCompat.getColor(this, android.R.color.white))
+            textEnabledStatus.text = "برنامه فعال است"
+        } else {
+            buttonToggleEnabled.setBackgroundTintList(
+                ContextCompat.getColorStateList(this, R.color.error_red)
+            )
+            textEnabledStatus.text = "برنامه غیرفعال است"
         }
+    }
+
+    private fun setWebhookExpanded(expanded: Boolean) {
+        webhookExpanded = expanded
+        layoutWebhookContent.visibility = if (expanded) View.VISIBLE else View.GONE
+        imageWebhookExpand.animate().rotation(if (expanded) 180f else 0f).setDuration(180).start()
     }
 
     private fun setupClickListeners() {
         buttonToggleEnabled.setOnClickListener {
             toggleEnabled()
+        }
+
+        layoutWebhookHeader.setOnClickListener {
+            setWebhookExpanded(!webhookExpanded)
         }
 
         buttonSave.setOnClickListener {
@@ -296,6 +323,7 @@ class MainActivity : AppCompatActivity() {
         settingsManager.setPayloadTemplate(
             payloadTemplate.ifBlank { PayloadBuilder.DEFAULT_TEMPLATE }
         )
+        settingsManager.setMarkdownCodeBlock(switchMarkdownCodeBlock.isChecked)
 
         Toast.makeText(this, "تنظیمات ذخیره شد", Toast.LENGTH_SHORT).show()
     }

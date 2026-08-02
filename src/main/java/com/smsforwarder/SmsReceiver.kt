@@ -21,28 +21,31 @@ class SmsReceiver : BroadcastReceiver() {
             }
 
             val smsMessages = Telephony.Sms.Intents.getMessagesFromIntent(intent)
-            for (smsMessage in smsMessages) {
-                val sender = smsMessage.originatingAddress ?: ""
-                val messageBody = smsMessage.messageBody ?: ""
+            if (smsMessages.isNullOrEmpty()) {
+                return
+            }
 
-                Log.d("SmsReceiver", "SMS received from: $sender, body: $messageBody")
+            // پیامک‌های چندقسمتی را به یک متن کامل بچسبان
+            val sender = smsMessages[0].originatingAddress ?: ""
+            val messageBody = smsMessages.joinToString("") { it.messageBody ?: "" }
 
-                val matchedCondition = matchesAnyCondition(context, sender, messageBody)
-                if (matchedCondition != null) {
-                    val conditionName = matchedCondition.name.ifBlank { "بدون نام" }
+            Log.d("SmsReceiver", "SMS received from: $sender, parts=${smsMessages.size}, body: $messageBody")
 
-                    logManager.addLog(
-                        LogEntry(
-                            type = LogEntry.LogType.CONDITION_MATCHED,
-                            message = "شرط «$conditionName» تطابق داشت — پیام برای فوروارد آماده شد",
-                            sender = sender,
-                            smsBody = messageBody,
-                            conditionName = conditionName
-                        )
+            val matchedCondition = matchesAnyCondition(context, sender, messageBody)
+            if (matchedCondition != null) {
+                val conditionName = matchedCondition.name.ifBlank { "بدون نام" }
+
+                logManager.addLog(
+                    LogEntry(
+                        type = LogEntry.LogType.CONDITION_MATCHED,
+                        message = "شرط «$conditionName» تطابق داشت — پیام برای فوروارد آماده شد",
+                        sender = sender,
+                        smsBody = messageBody,
+                        conditionName = conditionName
                     )
+                )
 
-                    forwardMessage(context, messageBody, sender, conditionName, logManager)
-                }
+                forwardMessage(context, messageBody, sender, conditionName, logManager)
             }
         }
     }
@@ -75,7 +78,11 @@ class SmsReceiver : BroadcastReceiver() {
         val url = settingsManager.getWebhookUrl()
         val httpMethod = settingsManager.getHttpMethod()
         val payloadTemplate = settingsManager.getPayloadTemplate()
-        val payload = PayloadBuilder.build(payloadTemplate, messageBody, sender, System.currentTimeMillis())
+        val textToSend = PayloadBuilder.prepareText(
+            messageBody,
+            settingsManager.isMarkdownCodeBlock()
+        )
+        val payload = PayloadBuilder.build(payloadTemplate, textToSend, sender, System.currentTimeMillis())
 
         if (url.isBlank()) {
             logManager.addLog(
@@ -112,7 +119,7 @@ class SmsReceiver : BroadcastReceiver() {
                 val result = httpService.sendRequest(
                     url = url,
                     method = httpMethod,
-                    message = messageBody,
+                    message = textToSend,
                     sender = sender,
                     payloadTemplate = payloadTemplate,
                     customHeadersJson = customHeaders

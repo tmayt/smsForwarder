@@ -20,6 +20,7 @@ class SettingsManager(context: Context) {
         private const val KEY_CONDITIONS = "conditions"
         private const val KEY_HTTP_METHOD = "http_method"
         private const val KEY_PAYLOAD_TEMPLATE = "payload_template"
+        private const val KEY_MARKDOWN_CODE_BLOCK = "markdown_code_block"
         private const val KEY_PREFS_VERSION = "prefs_version"
 
         /** نسخه اسکیمای تنظیمات؛ فقط وقتی ساختار داده عوض شد افزایش دهید و مهاجرت بنویسید. */
@@ -80,6 +81,14 @@ class SettingsManager(context: Context) {
 
     fun setPayloadTemplate(template: String) {
         prefs.edit().putString(KEY_PAYLOAD_TEMPLATE, template).apply()
+    }
+
+    fun isMarkdownCodeBlock(): Boolean {
+        return prefs.getBoolean(KEY_MARKDOWN_CODE_BLOCK, false)
+    }
+
+    fun setMarkdownCodeBlock(enabled: Boolean) {
+        prefs.edit().putBoolean(KEY_MARKDOWN_CODE_BLOCK, enabled).apply()
     }
 
     fun getConditions(): List<Condition> {
