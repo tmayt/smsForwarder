@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">smsforwarder</string>
+    <string name="app_name">فوروارد پیامک</string>
+    <string name="developer_name">tha</string>
+    <string name="developer_email">thaiostream@gmail.com</string>
 </resources>
-
