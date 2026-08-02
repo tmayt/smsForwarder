@@ -2,6 +2,7 @@ package com.smsforwarder
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -14,6 +15,7 @@ import android.widget.LinearLayout
 import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -21,8 +23,11 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
-import com.google.android.material.materialswitch.MaterialSwitch
+import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.android.material.textfield.TextInputEditText
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
 
@@ -36,10 +41,12 @@ class MainActivity : AppCompatActivity() {
     private lateinit var editWebhookUrl: EditText
     private lateinit var spinnerHttpMethod: Spinner
     private lateinit var editPayloadTemplate: TextInputEditText
-    private lateinit var switchMarkdownCodeBlock: MaterialSwitch
+    private lateinit var switchMarkdownCodeBlock: SwitchMaterial
     private lateinit var editCustomHeaders: TextInputEditText
     private lateinit var buttonSave: Button
     private lateinit var buttonAddCondition: MaterialButton
+    private lateinit var buttonExportSettings: MaterialButton
+    private lateinit var buttonImportSettings: MaterialButton
     private lateinit var recyclerViewConditions: RecyclerView
     private lateinit var recyclerViewLogs: RecyclerView
     private lateinit var textLogsEmpty: TextView
@@ -50,6 +57,22 @@ class MainActivity : AppCompatActivity() {
 
     private var webhookExpanded = false
     private val PERMISSION_REQUEST_CODE = 100
+
+    private val exportBackupLauncher = registerForActivityResult(
+        ActivityResultContracts.CreateDocument("application/json")
+    ) { uri: Uri? ->
+        if (uri != null) {
+            writeBackupToUri(uri)
+        }
+    }
+
+    private val importBackupLauncher = registerForActivityResult(
+        ActivityResultContracts.OpenDocument()
+    ) { uri: Uri? ->
+        if (uri != null) {
+            readBackupFromUri(uri)
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -85,6 +108,8 @@ class MainActivity : AppCompatActivity() {
         editCustomHeaders = findViewById(R.id.editCustomHeaders)
         buttonSave = findViewById(R.id.buttonSave)
         buttonAddCondition = findViewById(R.id.buttonAddCondition)
+        buttonExportSettings = findViewById(R.id.buttonExportSettings)
+        buttonImportSettings = findViewById(R.id.buttonImportSettings)
         recyclerViewConditions = findViewById(R.id.recyclerViewConditions)
         recyclerViewLogs = findViewById(R.id.recyclerViewLogs)
         textLogsEmpty = findViewById(R.id.textLogsEmpty)
@@ -158,7 +183,7 @@ class MainActivity : AppCompatActivity() {
     private fun setWebhookExpanded(expanded: Boolean) {
         webhookExpanded = expanded
         layoutWebhookContent.visibility = if (expanded) View.VISIBLE else View.GONE
-        imageWebhookExpand.animate().rotation(if (expanded) 180f else 0f).setDuration(180).start()
+        imageWebhookExpand.rotation = if (expanded) 180f else 0f
     }
 
     private fun setupClickListeners() {
@@ -178,6 +203,14 @@ class MainActivity : AppCompatActivity() {
             showConditionDialog(null)
         }
 
+        buttonExportSettings.setOnClickListener {
+            exportSettings()
+        }
+
+        buttonImportSettings.setOnClickListener {
+            confirmImportSettings()
+        }
+
         buttonRefreshLogs.setOnClickListener {
             loadLogs()
             Toast.makeText(this, "لاگ‌ها بروزرسانی شد", Toast.LENGTH_SHORT).show()
@@ -194,6 +227,57 @@ class MainActivity : AppCompatActivity() {
                 }
                 .setNegativeButton("لغو", null)
                 .show()
+        }
+    }
+
+    private fun exportSettings() {
+        val stamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(Date())
+        exportBackupLauncher.launch("smsforwarder_backup_$stamp.json")
+    }
+
+    private fun confirmImportSettings() {
+        AlertDialog.Builder(this)
+            .setTitle("ورود از JSON")
+            .setMessage("تنظیمات وب‌هوک و شرط‌های فعلی با محتوای فایل جایگزین می‌شوند. ادامه می‌دهید؟")
+            .setPositiveButton("انتخاب فایل") { _, _ ->
+                importBackupLauncher.launch(arrayOf("application/json", "text/*", "*/*"))
+            }
+            .setNegativeButton("لغو", null)
+            .show()
+    }
+
+    private fun writeBackupToUri(uri: Uri) {
+        try {
+            val json = settingsManager.exportBackupJson()
+            contentResolver.openOutputStream(uri)?.use { output ->
+                output.write(json.toByteArray(Charsets.UTF_8))
+            } ?: run {
+                Toast.makeText(this, "نتوانست فایل را بنویسد", Toast.LENGTH_SHORT).show()
+                return
+            }
+            Toast.makeText(this, "خروجی JSON ذخیره شد", Toast.LENGTH_SHORT).show()
+        } catch (e: Exception) {
+            Toast.makeText(this, "خطا در خروجی: ${e.message}", Toast.LENGTH_LONG).show()
+        }
+    }
+
+    private fun readBackupFromUri(uri: Uri) {
+        try {
+            val json = contentResolver.openInputStream(uri)?.use { input ->
+                input.bufferedReader(Charsets.UTF_8).readText()
+            } ?: run {
+                Toast.makeText(this, "نتوانست فایل را بخواند", Toast.LENGTH_SHORT).show()
+                return
+            }
+
+            if (settingsManager.importBackupJson(json)) {
+                loadSettings()
+                Toast.makeText(this, "تنظیمات و شرط‌ها با موفقیت وارد شدند", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this, "فایل JSON نامعتبر است", Toast.LENGTH_LONG).show()
+            }
+        } catch (e: Exception) {
+            Toast.makeText(this, "خطا در ورود: ${e.message}", Toast.LENGTH_LONG).show()
         }
     }
 

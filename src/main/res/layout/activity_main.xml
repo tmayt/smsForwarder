@@ -67,8 +67,6 @@
                 android:layout_marginBottom="16dp"
                 app:cardCornerRadius="12dp"
                 app:cardElevation="2dp"
-                app:strokeWidth="1dp"
-                app:strokeColor="?attr/colorPrimary"
                 app:cardBackgroundColor="?attr/colorSurface">
 
                 <LinearLayout
@@ -143,7 +141,6 @@
                             android:layout_width="match_parent"
                             android:layout_height="48dp"
                             android:layout_marginBottom="16dp"
-                            android:background="@android:drawable/btn_dropdown"
                             android:paddingStart="12dp"
                             android:paddingEnd="12dp" />
 
@@ -168,12 +165,12 @@
                                 android:imeOptions="actionDone" />
                         </com.google.android.material.textfield.TextInputLayout>
 
-                        <com.google.android.material.materialswitch.MaterialSwitch
+                        <com.google.android.material.switchmaterial.SwitchMaterial
                             android:id="@+id/switchMarkdownCodeBlock"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="16dp"
-                            android:text="ارسال متن داخل بلاک کد مارک‌داون (```)"
+                            android:text="ارسال متن داخل بلاک کد مارک‌داون"
                             android:textSize="14sp" />
 
                         <com.google.android.material.textfield.TextInputLayout
@@ -232,6 +229,52 @@
                 android:layout_marginBottom="16dp"
                 android:minHeight="56dp"
                 style="@style/ButtonStyle.Outlined" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="پشتیبان‌گیری"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="?attr/colorPrimary"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="12dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="8dp">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/buttonExportSettings"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="6dp"
+                    android:text="خروجی JSON"
+                    android:minHeight="52dp"
+                    style="@style/ButtonStyle.Outlined" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/buttonImportSettings"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="6dp"
+                    android:text="ورود JSON"
+                    android:minHeight="52dp"
+                    style="@style/ButtonStyle.Outlined" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="تنظیمات وب‌هوک و شرط‌ها را به فایل JSON ذخیره یا از فایل بازیابی کنید."
+                android:textSize="12sp"
+                android:textColor="?attr/colorOnSurface"
+                android:alpha="0.65"
+                android:layout_marginBottom="16dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -295,7 +338,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="راهنما:\n• دکمه دایره‌ای برای فعال/غیرفعال کردن برنامه است\n• تنظیمات وب‌هوک داخل آکاردئون ذخیره می‌شود\n• اگر «بلاک کد مارک‌داون» روشن باشد، متن داخل ``` قرار می‌گیرد\n• شرط‌ها جداگانه ذخیره می‌شوند و با آپدیت برنامه حفظ می‌مانند\n• متغیرهای Payload: {{text}}، {{message}}، {{from}}، {{timestamp}}"
+                    android:text="راهنما:\n• دکمه دایره‌ای برای فعال/غیرفعال کردن برنامه است\n• تنظیمات وب‌هوک داخل آکاردئون ذخیره می‌شود\n• خروجی/ورود JSON برای پشتیبان تنظیمات و شرط‌هاست\n• شرط‌ها با آپدیت برنامه حفظ می‌مانند\n• متغیرهای Payload: {{text}}، {{message}}، {{from}}، {{timestamp}}"
                     android:textSize="13sp"
                     android:textColor="?attr/colorOnSurface"
                     android:alpha="0.7"

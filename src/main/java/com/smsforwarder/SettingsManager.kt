@@ -128,4 +128,58 @@ class SettingsManager(context: Context) {
         conditions.removeAll { it.id == conditionId }
         saveConditions(conditions)
     }
+
+    /** خروجی JSON از تنظیمات وب‌هوک + شرط‌ها (لاگ‌ها شامل نمی‌شود). */
+    fun exportBackupJson(): String {
+        val backup = SettingsBackup(
+            version = SettingsBackup.CURRENT_BACKUP_VERSION,
+            enabled = isEnabled(),
+            webhookUrl = getWebhookUrl(),
+            customHeaders = getCustomHeaders(),
+            httpMethod = getHttpMethod(),
+            payloadTemplate = getPayloadTemplate(),
+            markdownCodeBlock = isMarkdownCodeBlock(),
+            conditions = getConditions()
+        )
+        return gson.toJson(backup)
+    }
+
+    /**
+     * ایمپورت از JSON. در صورت موفقیت true برمی‌گرداند.
+     * کلیدهای SharedPreferences و مدل Condition عوض نمی‌شوند تا داده‌های فعلی دستگاه سالم بمانند.
+     */
+    fun importBackupJson(json: String): Boolean {
+        return try {
+            val backup = gson.fromJson(json, SettingsBackup::class.java)
+                ?: return false
+
+            val method = backup.httpMethod.uppercase().ifBlank { "POST" }
+            val safeMethod = if (method in HTTP_METHODS) method else "POST"
+            val template = backup.payloadTemplate.ifBlank { PayloadBuilder.DEFAULT_TEMPLATE }
+            val conditions = backup.conditions.map { condition ->
+                condition.copy(
+                    id = condition.id.ifBlank { System.currentTimeMillis().toString() },
+                    name = condition.name,
+                    sender = condition.sender,
+                    exactSender = condition.exactSender,
+                    message = condition.message
+                )
+            }
+
+            prefs.edit()
+                .putBoolean(KEY_ENABLED, backup.enabled)
+                .putString(KEY_WEBHOOK_URL, backup.webhookUrl)
+                .putString(KEY_CUSTOM_HEADERS, backup.customHeaders)
+                .putString(KEY_HTTP_METHOD, safeMethod)
+                .putString(KEY_PAYLOAD_TEMPLATE, template)
+                .putBoolean(KEY_MARKDOWN_CODE_BLOCK, backup.markdownCodeBlock)
+                .putString(KEY_CONDITIONS, gson.toJson(conditions))
+                .apply()
+
+            true
+        } catch (e: Exception) {
+            Log.e("SettingsManager", "Failed to import backup", e)
+            false
+        }
+    }
 }
