@@ -5,14 +5,34 @@
     android:viewportWidth="108"
     android:viewportHeight="108">
 
-    <!-- Centered white mark circle -->
+    <!-- Soft white disc behind mark -->
     <path
         android:fillColor="#FFFFFF"
-        android:pathData="M54,54m-26,0a26,26 0,1 1,52 0a26,26 0,1 1,-52 0" />
+        android:fillAlpha="0.12"
+        android:pathData="M54,54m-30,0a30,30 0,1 1,60 0a30,30 0,1 1,-60 0" />
 
-    <!-- Minimal forward arrow -->
+    <!-- SMS bubble body -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M34,36 C34,32.7 36.7,30 40,30 H62 C65.3,30 68,32.7 68,36 V52 C68,55.3 65.3,58 62,58 H48 L40,66 V58 H40 C36.7,58 34,55.3 34,52 Z" />
+
+    <!-- Text lines -->
     <path
         android:fillColor="#0B4F6C"
-        android:pathData="M42,54 L58,44 L58,50 L68,50 L68,58 L58,58 L58,64 Z" />
+        android:pathData="M40,38 H58 V41 H40 Z" />
+    <path
+        android:fillColor="#0B4F6C"
+        android:pathData="M40,44 H56 V47 H40 Z" />
+    <path
+        android:fillColor="#0B4F6C"
+        android:pathData="M40,50 H50 V53 H40 Z" />
+
+    <!-- Forward arrow -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M70,44 L84,54 L70,64 Z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M64,51 H76 V57 H64 Z" />
 
 </vector>

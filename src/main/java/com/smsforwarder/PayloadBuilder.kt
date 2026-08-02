@@ -5,10 +5,45 @@ import org.json.JSONObject
 object PayloadBuilder {
     const val DEFAULT_TEMPLATE = """{"text":"{{text}}","timestamp":{{timestamp}},"from":"{{from}}"}"""
 
-    /** اگر روشن باشد متن داخل بلاک کد مارک‌داون قرار می‌گیرد تا گیرنده به‌صورت monospace/raw ببیند. */
+    /**
+     * آماده‌سازی متن برای گیرندهٔ مارک‌داون‌دار:
+     * - NONE: بدون تغییر
+     * - CODE_BLOCK: داخل ``` تا به‌صورت کد دیده شود
+     * - ESCAPE: کاراکترهای مارک‌داون escape می‌شوند تا مثلاً #hello عیناً چاپ شود
+     */
+    fun prepareText(text: String, mode: MarkdownMode): String {
+        return when (mode) {
+            MarkdownMode.NONE -> text
+            MarkdownMode.CODE_BLOCK -> "```\n$text\n```"
+            MarkdownMode.ESCAPE -> escapeMarkdown(text)
+        }
+    }
+
+    /** برای سازگاری با کد قدیمی. */
     fun prepareText(text: String, markdownCodeBlock: Boolean): String {
-        if (!markdownCodeBlock) return text
-        return "```\n$text\n```"
+        return prepareText(
+            text,
+            if (markdownCodeBlock) MarkdownMode.CODE_BLOCK else MarkdownMode.NONE
+        )
+    }
+
+    /**
+     * Escape کاراکترهای رایج مارک‌داون تا به‌صورت متن خام رندر شوند.
+     * مثال: #hello → \#hello
+     */
+    fun escapeMarkdown(text: String): String {
+        val special = setOf(
+            '\\', '`', '*', '_', '{', '}', '[', ']', '(', ')',
+            '#', '+', '-', '.', '!', '|', '>', '~'
+        )
+        val result = StringBuilder(text.length * 2)
+        for (c in text) {
+            if (c in special) {
+                result.append('\\')
+            }
+            result.append(c)
+        }
+        return result.toString()
     }
 
     fun build(template: String, text: String, from: String, timestamp: Long): String {

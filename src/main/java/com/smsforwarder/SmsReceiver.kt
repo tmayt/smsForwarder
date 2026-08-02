@@ -80,7 +80,7 @@ class SmsReceiver : BroadcastReceiver() {
         val payloadTemplate = settingsManager.getPayloadTemplate()
         val textToSend = PayloadBuilder.prepareText(
             messageBody,
-            settingsManager.isMarkdownCodeBlock()
+            settingsManager.getMarkdownMode()
         )
         val payload = PayloadBuilder.build(payloadTemplate, textToSend, sender, System.currentTimeMillis())
 

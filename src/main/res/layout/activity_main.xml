@@ -165,13 +165,31 @@
                                 android:imeOptions="actionDone" />
                         </com.google.android.material.textfield.TextInputLayout>
 
-                        <com.google.android.material.switchmaterial.SwitchMaterial
-                            android:id="@+id/switchMarkdownCodeBlock"
+                        <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="16dp"
-                            android:text="ارسال متن داخل بلاک کد مارک‌داون"
-                            android:textSize="14sp" />
+                            android:text="حالت مارک‌داون متن"
+                            android:textSize="14sp"
+                            android:textColor="?attr/colorOnSurface"
+                            android:alpha="0.8"
+                            android:layout_marginBottom="4dp" />
+
+                        <Spinner
+                            android:id="@+id/spinnerMarkdownMode"
+                            android:layout_width="match_parent"
+                            android:layout_height="48dp"
+                            android:layout_marginBottom="8dp"
+                            android:paddingStart="12dp"
+                            android:paddingEnd="12dp" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Escape: کاراکترهایی مثل # * _ طوری ارسال می‌شوند که سمت مقابل عیناً چاپ شوند (مثلاً #hello)."
+                            android:textSize="12sp"
+                            android:textColor="?attr/colorOnSurface"
+                            android:alpha="0.65"
+                            android:layout_marginBottom="16dp" />
 
                         <com.google.android.material.textfield.TextInputLayout
                             android:layout_width="match_parent"

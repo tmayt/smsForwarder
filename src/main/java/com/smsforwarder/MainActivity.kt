@@ -23,7 +23,6 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
-import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.android.material.textfield.TextInputEditText
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -41,7 +40,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var editWebhookUrl: EditText
     private lateinit var spinnerHttpMethod: Spinner
     private lateinit var editPayloadTemplate: TextInputEditText
-    private lateinit var switchMarkdownCodeBlock: SwitchMaterial
+    private lateinit var spinnerMarkdownMode: Spinner
     private lateinit var editCustomHeaders: TextInputEditText
     private lateinit var buttonSave: Button
     private lateinit var buttonAddCondition: MaterialButton
@@ -83,6 +82,7 @@ class MainActivity : AppCompatActivity() {
 
         initViews()
         setupHttpMethodSpinner()
+        setupMarkdownModeSpinner()
         setupRecyclerViews()
         loadSettings()
         loadLogs()
@@ -104,7 +104,7 @@ class MainActivity : AppCompatActivity() {
         editWebhookUrl = findViewById(R.id.editWebhookUrl)
         spinnerHttpMethod = findViewById(R.id.spinnerHttpMethod)
         editPayloadTemplate = findViewById(R.id.editPayloadTemplate)
-        switchMarkdownCodeBlock = findViewById(R.id.switchMarkdownCodeBlock)
+        spinnerMarkdownMode = findViewById(R.id.spinnerMarkdownMode)
         editCustomHeaders = findViewById(R.id.editCustomHeaders)
         buttonSave = findViewById(R.id.buttonSave)
         buttonAddCondition = findViewById(R.id.buttonAddCondition)
@@ -129,6 +129,15 @@ class MainActivity : AppCompatActivity() {
         spinnerHttpMethod.adapter = adapter
     }
 
+    private fun setupMarkdownModeSpinner() {
+        val adapter = ArrayAdapter(
+            this,
+            android.R.layout.simple_spinner_dropdown_item,
+            MarkdownMode.labels
+        )
+        spinnerMarkdownMode.adapter = adapter
+    }
+
     private fun setupRecyclerViews() {
         conditionAdapter = ConditionAdapter(
             conditions = emptyList(),
@@ -147,13 +156,17 @@ class MainActivity : AppCompatActivity() {
         updateToggleButton()
         editWebhookUrl.setText(settingsManager.getWebhookUrl())
         editPayloadTemplate.setText(settingsManager.getPayloadTemplate())
-        switchMarkdownCodeBlock.isChecked = settingsManager.isMarkdownCodeBlock()
         editCustomHeaders.setText(settingsManager.getCustomHeaders())
         conditionAdapter.updateConditions(settingsManager.getConditions())
 
         val methodIndex = SettingsManager.HTTP_METHODS.indexOf(settingsManager.getHttpMethod())
         if (methodIndex >= 0) {
             spinnerHttpMethod.setSelection(methodIndex)
+        }
+
+        val markdownIndex = MarkdownMode.entries.indexOf(settingsManager.getMarkdownMode())
+        if (markdownIndex >= 0) {
+            spinnerMarkdownMode.setSelection(markdownIndex)
         }
     }
 
@@ -407,7 +420,9 @@ class MainActivity : AppCompatActivity() {
         settingsManager.setPayloadTemplate(
             payloadTemplate.ifBlank { PayloadBuilder.DEFAULT_TEMPLATE }
         )
-        settingsManager.setMarkdownCodeBlock(switchMarkdownCodeBlock.isChecked)
+        val markdownIndex = spinnerMarkdownMode.selectedItemPosition
+        val markdownMode = MarkdownMode.entries.getOrElse(markdownIndex) { MarkdownMode.NONE }
+        settingsManager.setMarkdownMode(markdownMode)
 
         Toast.makeText(this, "تنظیمات ذخیره شد", Toast.LENGTH_SHORT).show()
     }

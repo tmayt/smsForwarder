@@ -11,6 +11,9 @@ data class SettingsBackup(
     val customHeaders: String = "",
     val httpMethod: String = "POST",
     val payloadTemplate: String = PayloadBuilder.DEFAULT_TEMPLATE,
+    /** none | code_block | escape — ترجیح با این فیلد است. */
+    val markdownMode: String = MarkdownMode.NONE.prefsValue,
+    /** سازگاری با بکاپ‌های قدیمی. */
     val markdownCodeBlock: Boolean = false,
     val conditions: List<Condition> = emptyList()
 ) {

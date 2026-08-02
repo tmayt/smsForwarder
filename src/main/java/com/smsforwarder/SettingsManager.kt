@@ -21,6 +21,7 @@ class SettingsManager(context: Context) {
         private const val KEY_HTTP_METHOD = "http_method"
         private const val KEY_PAYLOAD_TEMPLATE = "payload_template"
         private const val KEY_MARKDOWN_CODE_BLOCK = "markdown_code_block"
+        private const val KEY_MARKDOWN_MODE = "markdown_mode"
         private const val KEY_PREFS_VERSION = "prefs_version"
 
         /** نسخه اسکیمای تنظیمات؛ فقط وقتی ساختار داده عوض شد افزایش دهید و مهاجرت بنویسید. */
@@ -83,12 +84,33 @@ class SettingsManager(context: Context) {
         prefs.edit().putString(KEY_PAYLOAD_TEMPLATE, template).apply()
     }
 
+    fun getMarkdownMode(): MarkdownMode {
+        val stored = prefs.getString(KEY_MARKDOWN_MODE, null)
+        if (stored != null) {
+            return MarkdownMode.fromPrefs(stored)
+        }
+        // سازگاری با تنظیم قدیمی (سوییچ بلاک کد)
+        return if (prefs.getBoolean(KEY_MARKDOWN_CODE_BLOCK, false)) {
+            MarkdownMode.CODE_BLOCK
+        } else {
+            MarkdownMode.NONE
+        }
+    }
+
+    fun setMarkdownMode(mode: MarkdownMode) {
+        prefs.edit()
+            .putString(KEY_MARKDOWN_MODE, mode.prefsValue)
+            .putBoolean(KEY_MARKDOWN_CODE_BLOCK, mode == MarkdownMode.CODE_BLOCK)
+            .apply()
+    }
+
+    /** سازگاری با کد/بکاپ قدیمی. */
     fun isMarkdownCodeBlock(): Boolean {
-        return prefs.getBoolean(KEY_MARKDOWN_CODE_BLOCK, false)
+        return getMarkdownMode() == MarkdownMode.CODE_BLOCK
     }
 
     fun setMarkdownCodeBlock(enabled: Boolean) {
-        prefs.edit().putBoolean(KEY_MARKDOWN_CODE_BLOCK, enabled).apply()
+        setMarkdownMode(if (enabled) MarkdownMode.CODE_BLOCK else MarkdownMode.NONE)
     }
 
     fun getConditions(): List<Condition> {
@@ -138,7 +160,8 @@ class SettingsManager(context: Context) {
             customHeaders = getCustomHeaders(),
             httpMethod = getHttpMethod(),
             payloadTemplate = getPayloadTemplate(),
-            markdownCodeBlock = isMarkdownCodeBlock(),
+            markdownMode = getMarkdownMode().prefsValue,
+            markdownCodeBlock = getMarkdownMode() == MarkdownMode.CODE_BLOCK,
             conditions = getConditions()
         )
         return gson.toJson(backup)
@@ -166,13 +189,20 @@ class SettingsManager(context: Context) {
                 )
             }
 
+            val markdownMode = when {
+                backup.markdownMode.isNotBlank() -> MarkdownMode.fromPrefs(backup.markdownMode)
+                backup.markdownCodeBlock -> MarkdownMode.CODE_BLOCK
+                else -> MarkdownMode.NONE
+            }
+
             prefs.edit()
                 .putBoolean(KEY_ENABLED, backup.enabled)
                 .putString(KEY_WEBHOOK_URL, backup.webhookUrl)
                 .putString(KEY_CUSTOM_HEADERS, backup.customHeaders)
                 .putString(KEY_HTTP_METHOD, safeMethod)
                 .putString(KEY_PAYLOAD_TEMPLATE, template)
-                .putBoolean(KEY_MARKDOWN_CODE_BLOCK, backup.markdownCodeBlock)
+                .putString(KEY_MARKDOWN_MODE, markdownMode.prefsValue)
+                .putBoolean(KEY_MARKDOWN_CODE_BLOCK, markdownMode == MarkdownMode.CODE_BLOCK)
                 .putString(KEY_CONDITIONS, gson.toJson(conditions))
                 .apply()
 
