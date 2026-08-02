@@ -5,34 +5,35 @@
     android:viewportWidth="108"
     android:viewportHeight="108">
 
-    <!-- Soft white disc behind mark -->
+    <!--
+      فقط خود لوگو — بدون دایره داخل تصویر.
+      لانچر اندروید خودش ماسک دایره‌ای می‌زند؛ اگر اینجا هم دایره بکشیم
+      «دایره داخل دایره» و حاشیه خالی زیاد دیده می‌شود.
+      محتوا داخل safe-zone (~18..90) و بزرگ‌تر از قبل.
+    -->
+
+    <!-- حباب پیامک -->
     <path
         android:fillColor="#FFFFFF"
-        android:fillAlpha="0.12"
-        android:pathData="M54,54m-30,0a30,30 0,1 1,60 0a30,30 0,1 1,-60 0" />
+        android:pathData="M24,32 C24,27.6 27.6,24 32,24 H64 C68.4,24 72,27.6 72,32 V56 C72,60.4 68.4,64 64,64 H46 L32,78 V64 H32 C27.6,64 24,60.4 24,56 Z" />
 
-    <!-- SMS bubble body -->
-    <path
-        android:fillColor="#FFFFFF"
-        android:pathData="M34,36 C34,32.7 36.7,30 40,30 H62 C65.3,30 68,32.7 68,36 V52 C68,55.3 65.3,58 62,58 H48 L40,66 V58 H40 C36.7,58 34,55.3 34,52 Z" />
-
-    <!-- Text lines -->
+    <!-- خطوط متن داخل حباب -->
     <path
         android:fillColor="#0B4F6C"
-        android:pathData="M40,38 H58 V41 H40 Z" />
+        android:pathData="M32,34 H60 V38 H32 Z" />
     <path
         android:fillColor="#0B4F6C"
-        android:pathData="M40,44 H56 V47 H40 Z" />
+        android:pathData="M32,42 H56 V46 H32 Z" />
     <path
         android:fillColor="#0B4F6C"
-        android:pathData="M40,50 H50 V53 H40 Z" />
+        android:pathData="M32,50 H48 V54 H32 Z" />
 
-    <!-- Forward arrow -->
+    <!-- فلش فوروارد متصل به حباب -->
     <path
         android:fillColor="#FFFFFF"
-        android:pathData="M70,44 L84,54 L70,64 Z" />
+        android:pathData="M68,40 L90,54 L68,68 Z" />
     <path
         android:fillColor="#FFFFFF"
-        android:pathData="M64,51 H76 V57 H64 Z" />
+        android:pathData="M58,50 H78 V58 H58 Z" />
 
 </vector>

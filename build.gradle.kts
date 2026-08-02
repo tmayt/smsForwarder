@@ -21,8 +21,8 @@ android {
         applicationId = "ir.tmayt.smsforwarder"
         minSdk = 24
         targetSdk = 34
-        versionCode = 27
-        versionName = "1.0.9"
+        versionCode = 28
+        versionName = "1.1.2"
     }
 
     signingConfigs {
