@@ -23,6 +23,7 @@ class SettingsManager(context: Context) {
         private const val KEY_MARKDOWN_CODE_BLOCK = "markdown_code_block"
         private const val KEY_MARKDOWN_MODE = "markdown_mode"
         private const val KEY_PREFS_VERSION = "prefs_version"
+        private const val KEY_CONSENT_ACCEPTED = "consent_accepted"
 
         /** نسخه اسکیمای تنظیمات؛ فقط وقتی ساختار داده عوض شد افزایش دهید و مهاجرت بنویسید. */
         private const val CURRENT_PREFS_VERSION = 1
@@ -41,6 +42,14 @@ class SettingsManager(context: Context) {
         // مهاجرت‌های آینده اینجا اضافه شوند (مثلاً rename فیلدها).
         // فعلاً فقط نسخه را ثبت می‌کنیم تا تنظیمات قبلی دست‌نخورده بمانند.
         prefs.edit().putInt(KEY_PREFS_VERSION, CURRENT_PREFS_VERSION).apply()
+    }
+
+    fun hasAcceptedConsent(): Boolean {
+        return prefs.getBoolean(KEY_CONSENT_ACCEPTED, false)
+    }
+
+    fun setConsentAccepted(accepted: Boolean) {
+        prefs.edit().putBoolean(KEY_CONSENT_ACCEPTED, accepted).apply()
     }
 
     fun isEnabled(): Boolean {

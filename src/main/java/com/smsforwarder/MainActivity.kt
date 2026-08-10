@@ -3,7 +3,6 @@ package com.smsforwarder
 import android.Manifest
 import android.content.pm.PackageManager
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -87,7 +86,27 @@ class MainActivity : AppCompatActivity() {
         loadSettings()
         loadLogs()
         setupClickListeners()
+        showConsentIfNeeded()
         requestPermissions()
+    }
+
+    private fun showConsentIfNeeded() {
+        if (settingsManager.hasAcceptedConsent()) {
+            return
+        }
+
+        AlertDialog.Builder(this)
+            .setTitle(R.string.consent_title)
+            .setMessage(R.string.consent_message)
+            .setCancelable(false)
+            .setPositiveButton(R.string.consent_accept) { _, _ ->
+                settingsManager.setConsentAccepted(true)
+                requestPermissions()
+            }
+            .setNegativeButton(R.string.consent_decline) { _, _ ->
+                finish()
+            }
+            .show()
     }
 
     override fun onResume() {
@@ -428,31 +447,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun requestPermissions() {
-        val permissions = mutableListOf<String>()
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_SMS)
-                != PackageManager.PERMISSION_GRANTED
-            ) {
-                permissions.add(Manifest.permission.RECEIVE_SMS)
-            }
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_SMS)
-                != PackageManager.PERMISSION_GRANTED
-            ) {
-                permissions.add(Manifest.permission.READ_SMS)
-            }
-        } else {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_SMS)
-                != PackageManager.PERMISSION_GRANTED
-            ) {
-                permissions.add(Manifest.permission.RECEIVE_SMS)
-            }
+        if (!settingsManager.hasAcceptedConsent()) {
+            return
         }
 
-        if (permissions.isNotEmpty()) {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_SMS)
+            != PackageManager.PERMISSION_GRANTED
+        ) {
             ActivityCompat.requestPermissions(
                 this,
-                permissions.toTypedArray(),
+                arrayOf(Manifest.permission.RECEIVE_SMS),
                 PERMISSION_REQUEST_CODE
             )
         }
@@ -470,7 +474,7 @@ class MainActivity : AppCompatActivity() {
             if (!allGranted) {
                 Toast.makeText(
                     this,
-                    "برای عملکرد صحیح برنامه، مجوزهای SMS لازم است",
+                    "برای عملکرد صحیح برنامه، مجوز دریافت SMS لازم است",
                     Toast.LENGTH_LONG
                 ).show()
             }

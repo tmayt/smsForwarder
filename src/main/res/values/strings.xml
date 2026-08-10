@@ -3,4 +3,8 @@
     <string name="app_name">فوروارد پیامک</string>
     <string name="developer_name">tha</string>
     <string name="developer_email">thaiostream@gmail.com</string>
+    <string name="consent_title">تأیید استفاده از برنامه</string>
+    <string name="consent_message">این برنامه پیامک‌های دریافتی را طبق شرط‌هایی که خودتان تعریف می‌کنید بررسی می‌کند و در صورت تطابق، محتوای پیام را به آدرس وب‌هوکی که شما وارد کرده‌اید ارسال می‌کند.\n\nداده‌ها به سرور توسعه‌دهنده ارسال نمی‌شوند. مسئولیت انتخاب وب‌هوک و استفادهٔ قانونی با شماست.\n\nبرای ادامه، این موارد را می‌پذیرید؟</string>
+    <string name="consent_accept">می‌پذیرم</string>
+    <string name="consent_decline">خروج</string>
 </resources>

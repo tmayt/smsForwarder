@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.provider.Telephony
 import android.util.Log
+import com.smsforwarder.BuildConfig
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -29,7 +30,9 @@ class SmsReceiver : BroadcastReceiver() {
             val sender = smsMessages[0].originatingAddress ?: ""
             val messageBody = smsMessages.joinToString("") { it.messageBody ?: "" }
 
-            Log.d("SmsReceiver", "SMS received from: $sender, parts=${smsMessages.size}, body: $messageBody")
+            if (BuildConfig.DEBUG) {
+                Log.d("SmsReceiver", "SMS received from: $sender, parts=${smsMessages.size}")
+            }
 
             val matchedCondition = matchesAnyCondition(context, sender, messageBody)
             if (matchedCondition != null) {

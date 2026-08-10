@@ -146,8 +146,7 @@ Content-Type: application/json
 
 ## 🔐 مجوزهای مورد نیاز
 
-- `RECEIVE_SMS`: برای دریافت SMS
-- `READ_SMS`: برای خواندن محتوای SMS
+- `RECEIVE_SMS`: برای دریافت SMS هنگام ورود پیام جدید
 - `INTERNET`: برای ارسال درخواست HTTP
 - `ACCESS_NETWORK_STATE`: برای بررسی وضعیت شبکه
 
@@ -220,6 +219,13 @@ adb logcat | grep -E "SmsReceiver|HttpService"
 ## 📄 مجوز
 
 این پروژه تحت مجوز MIT منتشر شده است. برای جزئیات بیشتر فایل LICENSE را ببینید.
+
+## 📋 انتشار در Play Store و گزارش False Positive
+
+متن‌های آماده برای Google Play SMS Permission، لیستینگ استور، و فرم‌های Avast/Kaspersky و سایر آنتی‌ویروس‌ها:
+
+→ [docs/](docs/README.md)
+
 
 ## 🤝 مشارکت
 
